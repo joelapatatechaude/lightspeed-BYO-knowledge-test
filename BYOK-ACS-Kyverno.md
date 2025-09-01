@@ -4,11 +4,11 @@
 
 This document lists all internal policy when interacting with the OpenShift cluster. Those policy should be followed. Any policy violation will be blocked by a Kyverno or ACM policy.
 
-# CIS-Docker-4.6 \- Ensure HEALTHCHECK instruction has been added to container
+# No CPU request or memory limit specified
 
-Description: CIS Docker Benchmark 4.6: Ensure HEALTHCHECK instruction has been added to container image.  
-Rationale: Health checks help ensure containers are running properly and enable automated recovery.  
-Remediation: Add HEALTHCHECK instruction to Dockerfiles to monitor container health.
+Description: Alert on deployments that have containers without CPU request or memory limit  
+Rationale: A container without a specified CPU request may be starved for CPU time, while a container without a specified memory limit may cause the host to become over-provisioned.  
+Remediation: Specify CPU request and memory limit for your deployment.
 
 # CIS-K8s-5.7.2 \- Ensure that default service accounts are not actively used
 
@@ -50,7 +50,6 @@ Secrets used as environment variables containing sensitive information may, if n
 
 HTTP traffic is not encrypted and hence insecure. This policy prevents configuration of OpenShift HTTP routes.
 
-# Require NetworkPolicy
+# Restrict StorageClass
 
-NetworkPolicy is used to control Pod-to-Pod communication and is a good practice to ensure only authorized Pods can send/receive traffic. This policy checks incoming Deployments to ensure they have a matching, preexisting NetworkPolicy.
-
+StorageClasses allow description of custom "classes" of storage offered by the cluster, based on quality-of-service levels, backup policies, or custom policies determined by the cluster administrators. For shared StorageClasses in a multi-tenancy environment, a reclaimPolicy of “Delete” should be used to ensure a PersistentVolume cannot be reused across Namespaces. This policy requires StorageClasses set a reclaimPolicy of “Delete”.  
